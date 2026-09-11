@@ -40,8 +40,8 @@ Plataformas: iOS y Android.
 La app se organiza en capas con dependencias en un solo sentido: **vistas → hooks/contexto → red/base de datos**.
 
 ```
-app/                 Rutas (Expo Router): solo declaran la navegación
 src/
+  app/               Rutas (Expo Router): solo declaran la navegación
   api/               Capa de red: cliente HTTP, errores tipados, DTO y mappers
   db/                Capa de datos local: conexión SQLite, migraciones y repositorio
   context/           Estado global de favoritos (Context API + reducer)
