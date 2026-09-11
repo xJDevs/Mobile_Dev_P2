@@ -1,6 +1,6 @@
 # Crypto Explorer
 
-App móvil para explorar en tiempo real el mercado de criptomonedas y guardar tus monedas favoritas en el dispositivo, incluso para consultarlas sin conexión.
+App móvil para explorar en tiempo real el mercado de criptomonedas y guardar monedas favoritas en el dispositivo, con consulta sin conexión.
 
 > **Estado:** en desarrollo. Las instrucciones de instalación y las capturas se agregan cuando exista el proyecto base.
 
@@ -40,8 +40,8 @@ Plataformas: iOS y Android.
 La app se organiza en capas con dependencias en un solo sentido: **vistas → hooks/contexto → red/base de datos**.
 
 ```
-app/                 Rutas (Expo Router): solo declaran la navegación
 src/
+  app/               Rutas (Expo Router): solo declaran la navegación
   api/               Capa de red: cliente HTTP, errores tipados, DTO y mappers
   db/                Capa de datos local: conexión SQLite, migraciones y repositorio
   context/           Estado global de favoritos (Context API + reducer)
