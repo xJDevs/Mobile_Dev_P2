@@ -16,6 +16,11 @@ expo-env.d.ts
 # Carpetas nativas generadas (Expo prebuild)
 /ios
 /android
+.kotlin/
+
+# Metro y TypeScript
+.metro-health-check*
+*.tsbuildinfo
 
 # Variables de entorno
 .env
