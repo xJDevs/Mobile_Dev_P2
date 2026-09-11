@@ -1,0 +1,45 @@
+# Planificación (no se sube)
+openspec/
+
+# Enunciado del curso
+public_Proyecto_2.pdf
+
+# Dependencias
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Carpetas nativas generadas (Expo prebuild)
+/ios
+/android
+
+# Variables de entorno
+.env
+.env*.local
+
+# Credenciales nativas
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Logs y depuración
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+# Sistema y editores
+.DS_Store
+*.pem
+.vscode/
+.idea/
+
+# Pruebas
+coverage/
