@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function Index() {
+// Marcador de posición de la navegación (tarea 5.1). La pantalla real llega en el grupo 7.
+export function CoinDetailScreen({ id }: { id: string }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Crypto Explorer</Text>
-      <Text>Proyecto base listo</Text>
+      <Text style={styles.title}>Detalle</Text>
+      <Text>Moneda: {id}</Text>
     </View>
   );
 }
