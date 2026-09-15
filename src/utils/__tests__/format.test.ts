@@ -1,4 +1,4 @@
-import { EMPTY_VALUE, formatCompactUsd, formatPercent, formatUsd } from '../format';
+import { EMPTY_VALUE, formatCompactUsd, formatDateTime, formatPercent, formatUsd } from '../format';
 
 describe('formatUsd', () => {
   it('muestra 2 decimales y separador de miles para precios ≥ 1 (ejemplo de la spec)', () => {
@@ -56,5 +56,19 @@ describe('formatCompactUsd', () => {
 
   it('muestra "—" si el valor es null', () => {
     expect(formatCompactUsd(null)).toBe(EMPTY_VALUE);
+  });
+});
+
+describe('formatDateTime', () => {
+  it('muestra la fecha y hora local como dd/mm/aaaa hh:mm', () => {
+    // Fecha construida en hora local para que la prueba no dependa de la zona horaria.
+    const local = new Date(2026, 8, 11, 6, 5);
+
+    expect(formatDateTime(local.toISOString())).toBe('11/09/2026 06:05');
+  });
+
+  it('muestra "—" si el valor es null o no es una fecha válida', () => {
+    expect(formatDateTime(null)).toBe(EMPTY_VALUE);
+    expect(formatDateTime('no-es-fecha')).toBe(EMPTY_VALUE);
   });
 });

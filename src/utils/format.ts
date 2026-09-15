@@ -60,3 +60,21 @@ export function formatCompactUsd(value: number | null): string {
   }
   return formatUsd(value);
 }
+
+const pad = (value: number) => String(value).padStart(2, '0');
+
+/**
+ * Fecha y hora local "dd/mm/aaaa hh:mm" a partir de un ISO 8601. Armada a mano:
+ * las opciones de Intl.DateTimeFormat no están garantizadas en Hermes.
+ */
+export function formatDateTime(iso: string | null): string {
+  if (iso === null) {
+    return EMPTY_VALUE;
+  }
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) {
+    return EMPTY_VALUE;
+  }
+  const day = `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
+  return `${day} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}

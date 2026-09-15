@@ -1,9 +1,9 @@
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { formatPercent, formatUsd } from '../utils/format';
-import { colors } from './colors';
+import { CoinIcon } from './CoinIcon';
+import { colorForChange, colors } from './colors';
 
 /** Datos que muestra una fila; Mercado y Favoritos adaptan sus modelos a esta forma. */
 export interface CoinRowData {
@@ -20,31 +20,6 @@ interface CoinRowProps {
   /** Sin valor no se muestra indicador; con true se muestra la estrella activa. */
   isFavorite?: boolean;
   onPress?: () => void;
-}
-
-function CoinIcon({ uri }: { uri: string | null }) {
-  const [failed, setFailed] = useState(false);
-
-  if (!uri || failed) {
-    return (
-      <View style={[styles.icon, styles.iconFallback]}>
-        <SymbolView
-          name={{ ios: 'bitcoinsign.circle', android: 'toll' }}
-          size={22}
-          tintColor={colors.textMuted}
-        />
-      </View>
-    );
-  }
-
-  return <Image source={{ uri }} style={styles.icon} onError={() => setFailed(true)} />;
-}
-
-function changeColor(change: number | null): string {
-  if (change === null) {
-    return colors.textMuted;
-  }
-  return change >= 0 ? colors.positive : colors.negative;
 }
 
 export function CoinRow({ coin, isFavorite, onPress }: CoinRowProps) {
@@ -67,7 +42,7 @@ export function CoinRow({ coin, isFavorite, onPress }: CoinRowProps) {
 
       <View style={styles.values}>
         <Text style={styles.price}>{formatUsd(coin.price)}</Text>
-        <Text style={[styles.change, { color: changeColor(coin.priceChangePercentage24h) }]}>
+        <Text style={[styles.change, { color: colorForChange(coin.priceChangePercentage24h) }]}>
           {formatPercent(coin.priceChangePercentage24h)}
         </Text>
       </View>
@@ -96,16 +71,6 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
   },
   rowPressed: {
-    backgroundColor: colors.surface,
-  },
-  icon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-  },
-  iconFallback: {
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: colors.surface,
   },
   identity: {
