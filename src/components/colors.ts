@@ -12,3 +12,11 @@ export const colors = {
   noticeBackground: '#FFF4E0',
   noticeText: '#7A4E00',
 } as const;
+
+/** Verde si la variación es ≥ 0, rojo si es negativa y gris si no hay dato. */
+export function colorForChange(change: number | null): string {
+  if (change === null) {
+    return colors.textMuted;
+  }
+  return change >= 0 ? colors.positive : colors.negative;
+}
