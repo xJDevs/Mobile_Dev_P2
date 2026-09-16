@@ -21,17 +21,25 @@ interface ResourceState<T> {
   isRefreshing: boolean;
 }
 
+export interface RemoteResourceOptions {
+  /** Con false no se carga al montar: la primera petición llega con reload o refresh. */
+  loadOnMount?: boolean;
+}
+
 /**
  * Estado de una petición remota (design D4). Cada petición nueva aborta la anterior y el
  * desmontaje aborta la que esté en curso; las respuestas de peticiones abortadas se ignoran.
  * `load` debe ser estable (función de módulo o useCallback) para no repetir la carga.
  */
-export function useRemoteResource<T>(load: (signal: AbortSignal) => Promise<T>): RemoteResource<T> {
+export function useRemoteResource<T>(
+  load: (signal: AbortSignal) => Promise<T>,
+  { loadOnMount = true }: RemoteResourceOptions = {}
+): RemoteResource<T> {
   const [state, setState] = useState<ResourceState<T>>({
     data: null,
     error: null,
     refreshError: null,
-    isLoading: true,
+    isLoading: loadOnMount,
     isRefreshing: false,
   });
   const controllerRef = useRef<AbortController | null>(null);
@@ -67,11 +75,13 @@ export function useRemoteResource<T>(load: (signal: AbortSignal) => Promise<T>):
   }, [load]);
 
   useEffect(() => {
-    start();
+    if (loadOnMount) {
+      start();
+    }
     return () => {
       controllerRef.current?.abort();
     };
-  }, [start]);
+  }, [start, loadOnMount]);
 
   const reload = useCallback(() => {
     setState((previous) => ({
