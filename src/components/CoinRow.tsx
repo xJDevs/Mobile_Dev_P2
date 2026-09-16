@@ -1,4 +1,5 @@
 import { SymbolView } from 'expo-symbols';
+import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { formatPercent, formatUsd } from '../utils/format';
@@ -19,56 +20,74 @@ interface CoinRowProps {
   coin: CoinRowData;
   /** Sin valor no se muestra indicador; con true se muestra la estrella activa. */
   isFavorite?: boolean;
+  /** Texto bajo el precio en lugar de la variación, p. ej. "Último precio guardado". */
+  priceNote?: string;
+  /** Control al final de la fila, fuera del área que responde a onPress. */
+  accessory?: ReactNode;
   onPress?: () => void;
 }
 
-export function CoinRow({ coin, isFavorite, onPress }: CoinRowProps) {
+export function CoinRow({ coin, isFavorite, priceNote, accessory, onPress }: CoinRowProps) {
   const symbol = coin.symbol.toUpperCase();
+  const price = formatUsd(coin.price);
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${coin.name}, ${symbol}, ${formatUsd(coin.price)}`}
-      onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}>
-      <CoinIcon uri={coin.imageUrl} />
+    <View style={styles.container}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${coin.name}, ${symbol}, ${price}${priceNote ? `, ${priceNote}` : ''}`}
+        onPress={onPress}
+        style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}>
+        <CoinIcon uri={coin.imageUrl} />
 
-      <View style={styles.identity}>
-        <Text style={styles.name} numberOfLines={1}>
-          {coin.name}
-        </Text>
-        <Text style={styles.symbol}>{symbol}</Text>
-      </View>
+        <View style={styles.identity}>
+          <Text style={styles.name} numberOfLines={1}>
+            {coin.name}
+          </Text>
+          <Text style={styles.symbol}>{symbol}</Text>
+        </View>
 
-      <View style={styles.values}>
-        <Text style={styles.price}>{formatUsd(coin.price)}</Text>
-        <Text style={[styles.change, { color: colorForChange(coin.priceChangePercentage24h) }]}>
-          {formatPercent(coin.priceChangePercentage24h)}
-        </Text>
-      </View>
+        <View style={styles.values}>
+          <Text style={styles.price}>{price}</Text>
+          {priceNote ? (
+            <Text style={styles.note}>{priceNote}</Text>
+          ) : (
+            <Text style={[styles.change, { color: colorForChange(coin.priceChangePercentage24h) }]}>
+              {formatPercent(coin.priceChangePercentage24h)}
+            </Text>
+          )}
+        </View>
 
-      {isFavorite ? (
-        <SymbolView
-          name={{ ios: 'star.fill', android: 'star' }}
-          size={18}
-          tintColor={colors.favorite}
-          accessibilityLabel="En favoritos"
-        />
-      ) : null}
-    </Pressable>
+        {isFavorite ? (
+          <SymbolView
+            name={{ ios: 'star.fill', android: 'star' }}
+            size={18}
+            tintColor={colors.favorite}
+            accessibilityLabel="En favoritos"
+          />
+        ) : null}
+      </Pressable>
+
+      {accessory}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.background,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
+  },
   row: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: colors.background,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border,
   },
   rowPressed: {
     backgroundColor: colors.surface,
@@ -98,5 +117,9 @@ const styles = StyleSheet.create({
   change: {
     fontSize: 13,
     fontWeight: '500',
+  },
+  note: {
+    color: colors.textMuted,
+    fontSize: 12,
   },
 });
